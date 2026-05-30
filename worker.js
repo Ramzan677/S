@@ -1,10 +1,9 @@
-// Listen for incoming requests
 addEventListener('fetch', event => {
   event.respondWith(handleRequest(event.request));
 });
 
 async function handleRequest(request) {
-  // 1. Handle CORS Preflight Options
+  // 1. Handle CORS Preflight Configurations
   if (request.method === "OPTIONS") {
     return new Response(null, {
       headers: {
@@ -15,47 +14,47 @@ async function handleRequest(request) {
     });
   }
 
-  // 2. Handle Actual Video Payload POST
+  // 2. Process Video Creation Pipeline via POST Method
   if (request.method === "POST") {
     try {
-      const bodyText = await request.text();
-      const targetUrl = "https://zecora0.serv00.net/ai/Sora2_s4.php";
+      const bodyPayload = await request.text();
+      const targetApiUrl = "https://zecora0.serv00.net/ai/Sora2_s4.php";
 
-      // Fire direct fetch to target API with disguised browser headers
-      const apiResponse = await fetch(targetUrl, {
+      // Disguise requests through native clean cloudflare IPs
+      const apiResponse = await fetch(targetApiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
         },
-        body: bodyText
+        body: bodyPayload
       });
 
-      const rawData = await apiResponse.text();
-      let jsonData;
+      const responseText = await apiResponse.text();
+      let compiledJson;
 
       try {
-        jsonData = JSON.parse(rawData);
-      } catch (e) {
-        jsonData = { raw_output: rawData };
+        compiledJson = JSON.parse(responseText);
+      } catch (jsonErr) {
+        compiledJson = { raw_data_stream: responseText };
       }
 
-      // Inject your elite developer signature into the JSON
-      jsonData.developer = "Developed by Ramzan Ahsan";
-      jsonData.powered_by = "Ramzan Ahsan Core Engine";
+      // Injecting explicit ownership signatures into application stream
+      compiledJson.developer = "Developed by Ramzan Ahsan";
+      compiledJson.infrastructure = "Ramzan Ahsan Premium Engine";
 
-      return new Response(JSON.stringify(jsonData), {
+      return new Response(JSON.stringify(compiledJson), {
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
-          "X-Developer": "Ramzan Ahsan"
+          "X-Developer-Signature": "Ramzan Ahsan"
         },
       });
 
-    } catch (err) {
+    } catch (networkError) {
       return new Response(JSON.stringify({ 
         success: false, 
-        error: "Edge network pipeline timeout.",
+        error: "Edge synchronization failure.",
         developer: "Developed by Ramzan Ahsan"
       }), {
         status: 500,
@@ -67,5 +66,5 @@ async function handleRequest(request) {
     }
   }
 
-  return new Response("Method not allowed on this channel.", { status: 405 });
+  return new Response("Method context rejected.", { status: 405 });
 }

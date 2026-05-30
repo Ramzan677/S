@@ -1,6 +1,4 @@
-name = "my-video-router"
+name = "video0"
 main = "worker.js"
 compatibility_date = "2026-05-30"
-
-[compatibility_flags]
-# No extra build tools required
+compatibility_flags = []
